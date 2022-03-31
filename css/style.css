@@ -40,11 +40,21 @@ body{
     margin-bottom: 3rem;
 }
 
+.playground {
+    display: flex;
+}
+
 .playground > ul{
     border: 1px solid #333;
     width: 250px;
     margin: auto;
 }
+.playground > #player2{
+    border: 1px solid #333;
+    width: 250px;
+    margin: auto;
+}
+
 
 .playground > ul > li{
     width: 100%;
