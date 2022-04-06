@@ -57,6 +57,46 @@ const drawMatrix = function(matrix, offset) {
   });
 };
 
+//adding rotation
+const playerotate = (dir) => {
+  const pos = Player.pos.x;
+  let offset = 1;
+  rotate(Player.matrix, dir);
+
+  //fixing bug of rotating in the wall
+  while (checker(arena, Player)) {
+    console.log(offset);
+    Player.pos.x += offset;
+    offset = -(offset + (offset > 0 ? 1 : -1));
+
+    if (offset > Player.matrix[0].length) {
+      rotate(Player.matrix, -dir);
+      console.log(pos);
+      Player.pos.x = pos;
+    }
+  }
+
+};
+
+const rotate = (matrix, dir) => {
+  for (let y = 0; y < matrix.length; y++) {
+    for (let x = 0; x < y; x++) {
+      [
+        matrix[x][y],
+        matrix[y][x],
+      ] = [
+        matrix[y][x],
+        matrix[x][y],
+      ];
+    }
+  }
+  if (dir > 0) {
+    matrix.forEach(row => row.reverse());
+  } else {
+    matrix.reverse();
+  }
+}
+
 
 let lastTime = 0;
 
@@ -122,11 +162,13 @@ const playerMove = (dir) => {
 document.addEventListener('keydown', event => {
   if (event.keyCode === 37) {
     playerMove(-1);
-} else if (event.keyCode === 39) {
+  } else if (event.keyCode === 39) {
     playerMove(1);
-} else if (event.keyCode === 40) {
+  } else if (event.keyCode === 40) {
     PlayerDrop();
+  } else if (event.keyCode === 38) {
+    playerotate(-1);
   }
-})
+});
 
 update()
