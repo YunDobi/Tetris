@@ -4,6 +4,24 @@ console.log(context)
 
 context.scale(20,20);
 
+//clear if the line is all "1"
+const arenaclear = () => {
+  let rowCounter = 1;
+  outerloop: for (let i = 0; i < arena.length; i++) {
+    for (let x = 0; x < arena[i].length; x++) {
+      if (arena[i][x] === 0) {
+        continue outerloop;
+      }
+    }
+    const row = arena.splice(i, 1)[0].fill(0);
+    arena.unshift(row);
+    i++;
+
+    Player.score += rowCounter * 10;
+    rowCounter *= 2;
+  }
+};
+
 const createPiece = (type) => {
   if (type === 'I') {
     return [
@@ -90,7 +108,7 @@ const drawMatrix = function(matrix, offset) {
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
-        context.fillStyle = 'red';
+        context.fillStyle = colors[value];
         context.fillRect(x + offset.x, y + offset.y, 1, 1);
       }
     });
@@ -150,9 +168,9 @@ const PlayerDrop = function() {
   if (checker(arena, Player)) {
     Player.pos.y --;
     merge(arena, Player);
-    // console.log(arena)
-    // console.log(Player)
     playereset();
+    arenaclear();
+    updateScore();
   }
   dropCounter = 0;
 };
@@ -189,7 +207,7 @@ const merge = function(arena, player) {
 //player will can be other, so create new files
 const Player = {
   pos: {x: 5, y: 5},
-  matrix: createPiece("T"),
+  matrix: null,
   score: 0
 };
 
@@ -201,6 +219,8 @@ const playereset = () => {
                  (Player.matrix[0].length / 2 | 0);
   if (checker(arena, Player)) {
     arena.forEach(row => row.fill(0));
+    Player.score = 0;
+    updateScore();
   }
 };
 
@@ -210,6 +230,21 @@ const playerMove = (dir) => {
     Player.pos.x -= dir;
   }
 };
+
+const updateScore = () => {
+  document.getElementById("score").innerHTML = Player.score;
+};
+
+const colors = [
+  null,
+  '#FF0D72',
+  '#0DC2FF',
+  '#0DFF72',
+  '#F538FF',
+  '#FF8E0D',
+  '#FFE138',
+  '#3877FF',
+];
 
 document.addEventListener('keydown', event => {
   if (event.keyCode === 37) {
@@ -223,4 +258,6 @@ document.addEventListener('keydown', event => {
   }
 });
 
-update()
+playereset();
+updateScore();
+update();
