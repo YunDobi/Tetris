@@ -189,7 +189,7 @@ const merge = function(arena, player) {
 //player will can be other, so create new files
 const Player = {
   pos: {x: 5, y: 5},
-  matrix: null,
+  matrix: createPiece("T"),
   score: 0
 };
 
@@ -201,8 +201,6 @@ const playereset = () => {
                  (Player.matrix[0].length / 2 | 0);
   if (checker(arena, Player)) {
     arena.forEach(row => row.fill(0));
-    Player.score = 0;
-    // updateScore();
   }
 };
 
