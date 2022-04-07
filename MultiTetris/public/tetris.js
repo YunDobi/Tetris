@@ -4,12 +4,52 @@ console.log(context)
 
 context.scale(20,20);
 
+const createPiece = (type) => {
+  if (type === 'I') {
+    return [
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+      [0, 1, 0, 0],
+    ];
+  } else if (type === 'L') {
+    return [
+      [0, 2, 0],
+      [0, 2, 0],
+      [0, 2, 2],
+    ];
+  } else if (type === 'J') {
+    return [
+      [0, 3, 0],
+      [0, 3, 0],
+      [3, 3, 0],
+    ];
+  } else if (type === 'O') {
+    return [
+      [4, 4],
+      [4, 4],
+    ];
+  } else if (type === 'Z') {
+    return [
+      [5, 5, 0],
+      [0, 5, 5],
+      [0, 0, 0],
+    ];
+  } else if (type === 'S') {
+    return [
+      [0, 6, 6],
+      [6, 6, 0],
+      [0, 0, 0],
+    ];
+  } else if (type === 'T') {
+    return [
+      [0, 7, 0],
+      [7, 7, 7],
+      [0, 0, 0],
+    ];
+  }
+};
 
-const matrix = [
-  [0,0,0],
-  [1,1,1],
-  [0,1,0]
-];
 
 //checking touching other blocke or bottom
 const checker = function(arena, player) {
@@ -112,7 +152,7 @@ const PlayerDrop = function() {
     merge(arena, Player);
     // console.log(arena)
     // console.log(Player)
-    Player.pos.y = 0;
+    playereset();
   }
   dropCounter = 0;
 };
@@ -149,7 +189,21 @@ const merge = function(arena, player) {
 //player will can be other, so create new files
 const Player = {
   pos: {x: 5, y: 5},
-  matrix: matrix
+  matrix: null,
+  score: 0
+};
+
+const playereset = () => {
+  const pieces = 'TJLOSZI';
+  Player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+  Player.pos.y = 0;
+  Player.pos.x = (arena[0].length / 2 | 0) -
+                 (Player.matrix[0].length / 2 | 0);
+  if (checker(arena, Player)) {
+    arena.forEach(row => row.fill(0));
+    Player.score = 0;
+    // updateScore();
+  }
 };
 
 const playerMove = (dir) => {
