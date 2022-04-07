@@ -211,6 +211,7 @@ const Player = {
   score: 0
 };
 
+//after the block is set and comming down new matrix
 const playereset = () => {
   const pieces = 'TJLOSZI';
   Player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
