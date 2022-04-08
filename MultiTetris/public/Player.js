@@ -71,7 +71,7 @@ class Players {
       this.arena.Merge(this);
       this.Reset();
       this.arena.Clear();
-      updateScore();
+      // updateScore();
     }
     this.dropCounter = 0;
   }
@@ -86,7 +86,7 @@ class Players {
     if (this.arena.Checker(this)) {
       this.arena.ClearLine();
       this.score = 0;
-      updateScore();
+      // updateScore();
     }
   };
 

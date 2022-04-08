@@ -65,19 +65,23 @@ const playerElements = document.querySelectorAll(".player");
 //38 is up
 document.addEventListener('keydown', event => {
   [
-    [37, 39, 40, 38].forEach((key, index) => {
-      const player = tetri[index].player;
-      if (event.keyCode === key[1]) {
-        player.Move(-1);
-      } else if (event.keyCode === key[2]) {
-        player.Move(1);
-      } else if (event.keyCode === key[3]) {
-        player.Drop();
-      } else if (event.keyCode === key[4]) {
-        player.Rotate(-1);
-      }
-    })
-  ]
+    [37, 39, 40, 38]
+  ].forEach((key, index) => {
+    const player = tetri[index].player;
+    //left
+    if (event.keyCode === key[0]) {
+      player.Move(-1);
+      //right
+    } else if (event.keyCode === key[1]) {
+      player.Move(1);
+      //up
+    } else if (event.keyCode === key[2]) {
+      player.Drop();
+      //down
+    } else if (event.keyCode === key[3]) {
+      player.Rotate(-1);
+    }
+  });
 });
 
 // tetris.updateScore();
