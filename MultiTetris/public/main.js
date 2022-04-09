@@ -1,7 +1,3 @@
-const canvas = document.getElementById('tetris');
-const context = canvas.getContext('2d');
-
-context.scale(20,20);
 
 const createPiece = function(type) {
   if (type === 'T') {
@@ -49,39 +45,41 @@ const createPiece = function(type) {
   }
 };
 
-const colors = [
-  null,
-  '#FF0D72',
-  '#0DC2FF',
-  '#0DFF72',
-  '#F538FF',
-  '#FF8E0D',
-  '#FFE138',
-  '#3877FF',
-];
 
-const arena = new Arena(12, 20);
+const tetri = [];
 
-const player = new Players;
-
-const tetris = new Tetris;
-
-
-const updateScore = () => {
-  document.getElementById("score").innerHTML = player.score;
-};
-
-
-document.addEventListener('keydown', event => {
-  if (event.keyCode === 37) {
-    player.Move(-1);
-  } else if (event.keyCode === 39) {
-    player.Move(1);
-  } else if (event.keyCode === 40) {
-    player.Drop();
-  } else if (event.keyCode === 38) {
-    player.Rotate(-1);
-  }
+const playerElements = document.querySelectorAll(".player");
+[...playerElements].forEach(element => {
+  const tetris = new Tetris(element);
+  tetri.push(tetris);
 });
 
-updateScore();
+
+//38 is up
+document.addEventListener('keydown', event => {
+  [
+    [37, 39, 40, 38]
+  ].forEach((key, index) => {
+    const player = tetri[index].player;
+    //left
+    if (event.keyCode === key[0]) {
+      player.Move(-1);
+      //right
+    } else if (event.keyCode === key[1]) {
+      player.Move(1);
+      //up
+    } else if (event.keyCode === key[3]) {
+      player.Rotate(-1);
+    } 
+
+    if (event.keyCode === key[2]) {
+      if (event.type === 'keydown') {
+        player.Drop();
+        player.dropInterval = player.dropFast;
+        document.addEventListener('keyup', () => {
+          player.dropInterval = player.dropSlow;
+        });
+      }
+    }
+  });
+});

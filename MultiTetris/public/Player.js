@@ -1,8 +1,15 @@
 //player will can be other, so create new files
 class Players {
-  constructor() {
+  constructor(tetris) {
+
+    this.dropSlow = 1000;
+    this.dropFast = 50;
+
+    this.tetris = tetris;
+    this.arena = tetris.arena;
+
     this.dropCounter = 0;
-    this.dropInterval = 1000;
+    this.dropInterval = this.dropSlow;
 
     this.pos = {x: 0, y: 0},
     this.matrix = null,
@@ -13,7 +20,7 @@ class Players {
 
   Move(dir) {
     this.pos.x += dir;
-    if (arena.Checker(this)) {
+    if (this.arena.Checker(this)) {
       this.pos.x -= dir;
     }
   }
@@ -25,7 +32,7 @@ class Players {
     this.RotateMatrix(this.matrix, dir);
 
     //fixing bug of rotating in the wall
-    while (arena.Checker(this)) {
+    while (this.arena.Checker(this)) {
       console.log(offset);
       this.pos.x += offset;
       offset = -(offset + (offset > 0 ? 1 : -1));
@@ -62,12 +69,13 @@ class Players {
   Drop() {
     this.pos.y ++;
     //checking touching other block or bottom
-    if (arena.Checker(this)) {
+    if (this.arena.Checker(this)) {
       this.pos.y --;
-      arena.Merge(this);
+      this.arena.Merge(this);
       this.Reset();
-      arena.Clear();
-      updateScore();
+      this.score += this.arena.Clear();
+
+      this.tetris.UpdateScore(this.score);
     }
     this.dropCounter = 0;
   }
@@ -77,14 +85,17 @@ class Players {
     const pieces = 'TJLOSZI';
     this.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
     this.pos.y = 0;
-    this.pos.x = (arena.matrix[0].length / 2 | 0) -
+    this.pos.x = (this.arena.matrix[0].length / 2 | 0) -
                   (this.matrix[0].length / 2 | 0);
-    if (arena.Checker(this)) {
-      arena.ClearLine();
+
+                  
+    //if the loss, reset the arena
+    if (this.arena.Checker(this)) {
+      this.arena.ClearLine();
       this.score = 0;
-      updateScore();
+      this.tetris.UpdateScore();
     }
-  };
+  }
 
   Update(tempTime) {
     this.dropCounter += tempTime;

@@ -25,11 +25,12 @@ class Arena {
       }
     }
     return false;
-  };
+  }
 
   //clear if the line is all "1"
   Clear() {
     let rowCounter = 1;
+    let score = 0;
     outerloop: for (let i = 0; i < this.matrix.length; i++) {
       for (let x = 0; x < this.matrix[i].length; x++) {
         if (this.matrix[i][x] === 0) {
@@ -40,9 +41,10 @@ class Arena {
       this.matrix.unshift(row);
       i++;
 
-      player.score += rowCounter * 10;
+      score += rowCounter * 10;
       rowCounter *= 2;
     }
+    return score;
   }
 
   ClearLine() {
