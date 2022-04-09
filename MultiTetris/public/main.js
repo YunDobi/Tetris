@@ -46,18 +46,11 @@ const createPiece = function(type) {
 };
 
 
-
-// const updateScore = () => {
-//   console.log(tetris[0])
-//   document.getElementById('score').innerHTML = tetris.player.score;
-// };
-
 const tetri = [];
 
 const playerElements = document.querySelectorAll(".player");
 [...playerElements].forEach(element => {
-  const canvas = element.querySelector('canvas');
-  const tetris = new Tetris(canvas);
+  const tetris = new Tetris(element);
   tetri.push(tetris);
 });
 
@@ -75,13 +68,18 @@ document.addEventListener('keydown', event => {
     } else if (event.keyCode === key[1]) {
       player.Move(1);
       //up
-    } else if (event.keyCode === key[2]) {
-      player.Drop();
-      //down
     } else if (event.keyCode === key[3]) {
       player.Rotate(-1);
+    } 
+
+    if (event.keyCode === key[2]) {
+      if (event.type === 'keydown') {
+        player.Drop();
+        player.dropInterval = player.dropFast;
+        document.addEventListener('keyup', () => {
+          player.dropInterval = player.dropSlow;
+        });
+      }
     }
   });
 });
-
-// tetris.updateScore();
