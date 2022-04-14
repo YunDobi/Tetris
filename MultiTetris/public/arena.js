@@ -49,6 +49,7 @@ class Arena {
 
   ClearLine() {
     this.matrix.forEach(row => row.fill(0));
+    console.log("clear")
   }
 
   //merging the arean that created and player which is in the canvas

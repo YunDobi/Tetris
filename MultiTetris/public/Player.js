@@ -83,12 +83,12 @@ class Players {
   //after the block is set and comming down new matrix
   Reset() {
     const pieces = 'TJLOSZI';
-    this.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
+    this.matrix = this.tetris.CreatePiece(pieces[pieces.length * Math.random() | 0]);
     this.pos.y = 0;
     this.pos.x = (this.arena.matrix[0].length / 2 | 0) -
                   (this.matrix[0].length / 2 | 0);
 
-                  
+
     //if the loss, reset the arena
     if (this.arena.Checker(this)) {
       this.arena.ClearLine();
