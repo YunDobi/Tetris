@@ -23,22 +23,25 @@ server.on('connection', conn => {
     msg = msg.toString();
     console.log('Message received', msg);
     const data =  JSON.parse(msg);
+    // console.log(data)
 
     if (data.type === 'create-session') {
       const id = createId();
       const session = new Session(id);
       session.join(client);
-
+      
       sessions.set(session.id, session);
       client.send({
-        type: 'create-session',
+        type: 'session-created',
         id: session.id,
       });
+      console.log(sessions);
     } else if (data.type === 'join-session') {
       const session = sessions.get(data.id);
       session.join(client);
 
       console.log('Session', sessions);
+
     }
   });
 
