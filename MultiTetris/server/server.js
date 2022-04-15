@@ -23,7 +23,6 @@ server.on('connection', conn => {
     msg = msg.toString();
     console.log('Message received', msg);
     const data =  JSON.parse(msg);
-    console.log(data)
 
     if (data.type === 'create-session') {
       const id = createId();
@@ -32,9 +31,14 @@ server.on('connection', conn => {
 
       sessions.set(session.id, session);
       client.send({
-        type: 'session-created',
-        id: 'session.id',
+        type: 'create-session',
+        id: session.id,
       });
+    } else if (data.type === 'join-session') {
+      const session = sessions.get(data.id);
+      session.join(client);
+
+      console.log('Session', sessions);
     }
   });
 
