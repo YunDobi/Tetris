@@ -17,7 +17,7 @@ const createId = function(len = 6, chars = 'abcdefghjkmnopqrstvwxyz01234567890')
 
 const createClient = function(conn, id = createId()) {
   return new Client(conn, id);
-}
+};
 
 const createSession = function(id = createId()) {
   if (sessions.has(id)) {
@@ -52,6 +52,7 @@ const broadcastSession = function(session) {
 server.on('connection', conn => {
   console.log('connection established');
   const client = createClient(conn);
+  console.log(sessions)
 
   conn.on('message', msg => {
     msg = msg.toString();
@@ -69,6 +70,7 @@ server.on('connection', conn => {
         id: session.id,
       });
       console.log(sessions);
+      
     } else if (data.type === 'join-session') {
       const session = getSession(data.id) || createSession(data.id);
       session.join(client);
@@ -83,7 +85,6 @@ server.on('connection', conn => {
   conn.on('close', () => {
     console.log('Connection closed');
     const session = client.session;
-
     if (session) {
       session.leave(client);
       if (session.clients.size === 0) {
@@ -92,5 +93,7 @@ server.on('connection', conn => {
     }
 
     broadcastSession(session);
+
+    console.log(sessions);
   });
 });
