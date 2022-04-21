@@ -10,8 +10,11 @@ body {
 .player {
   flex: 1 1 auto;
 }
+.local canvas{
+  border-color: #FFF;
+}
 
 canvas {
-  border: solid .2em #FFF;
+  border: solid .2em #707077;
   height: 90vh;
 }

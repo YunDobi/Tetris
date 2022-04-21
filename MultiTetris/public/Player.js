@@ -5,6 +5,8 @@ class Players {
     this.dropSlow = 1000;
     this.dropFast = 50;
 
+    this.event = new Events();
+
     this.tetris = tetris;
     this.arena = tetris.arena;
 
@@ -22,7 +24,9 @@ class Players {
     this.pos.x += dir;
     if (this.arena.Checker(this)) {
       this.pos.x -= dir;
+      return;
     }
+    this.event.emit('pos', this.pos);
   }
 
   //adding rotation
@@ -43,6 +47,7 @@ class Players {
         this.pos.x = pos;
       }
     }
+    this.event.emit('matrix', this.matrix);
   }
 
 
@@ -68,6 +73,7 @@ class Players {
   //moving to the bottom and referesh
   Drop() {
     this.pos.y ++;
+    this.dropCounter = 0;
     //checking touching other block or bottom
     if (this.arena.Checker(this)) {
       this.pos.y --;
@@ -75,9 +81,10 @@ class Players {
       this.Reset();
       this.score += this.arena.Clear();
 
-      this.tetris.UpdateScore(this.score);
+      this.event.emit('score', this.score);
+      return;
     }
-    this.dropCounter = 0;
+    this.event.emit('pos', this.pos);
   }
 
   //after the block is set and comming down new matrix
@@ -93,8 +100,11 @@ class Players {
     if (this.arena.Checker(this)) {
       this.arena.ClearLine();
       this.score = 0;
-      this.tetris.UpdateScore();
+      this.event.emit('score', this.score);
     }
+
+    this.event.emit('pos', this.pos);
+    this.event.emit('matrix', this.matrix);
   }
 
   Update(tempTime) {
