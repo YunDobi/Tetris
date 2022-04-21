@@ -9,6 +9,10 @@ class Tetris {
     this.arena = new Arena(12, 20);
     this.player = new Players(this);
 
+    this.player.event.listen('score', score => {
+      this.UpdateScore(score);
+    });
+
     this.colors = [
       null,
       '#FF0D72',
@@ -22,19 +26,16 @@ class Tetris {
 
     let lastTime = 0;
     //base on the time, keep change the shape and matrix
-    const update = (time = 0) => {
+    this._update = (time = 0) => {
       const tempTime = time - lastTime;
       lastTime = time;
 
       this.player.Update(tempTime);
 
       this.Draw();
-      requestAnimationFrame(update);
+      requestAnimationFrame(this._update);
     };
 
-    update();
-
-    this.UpdateScore(0);
   }
 
 
@@ -102,6 +103,10 @@ class Tetris {
         }
       });
     });
+  }
+
+  run() {
+    this._update();
   }
 
   UpdateScore(score) {

@@ -70,7 +70,7 @@ server.on('connection', conn => {
       session.join(client);
 
       broadcastSession(session);
-      console.log("Session", sessions);
+      // console.log("Session", sessions);
     }
     // } else if (data.type === 'state-update') {
     //         const [key, value] = data.state;

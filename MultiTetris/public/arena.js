@@ -9,6 +9,7 @@ class Arena {
     }
     this.matrix = matrix;
 
+    this.event = new Events;
   }
 
   //checking touching other blocke or bottom
@@ -44,12 +45,14 @@ class Arena {
       score += rowCounter * 10;
       rowCounter *= 2;
     }
+    this.event.emit("matrix", this.matrix);
     return score;
   }
 
   ClearLine() {
     this.matrix.forEach(row => row.fill(0));
     console.log("clear")
+    this.event.emit("matrix", this.matrix);
   }
 
   //merging the arean that created and player which is in the canvas
@@ -61,5 +64,6 @@ class Arena {
         }
       });
     });
+    this.event.emit("matrix", this.matrix);
   };
 }
