@@ -43,22 +43,28 @@ class Connection {
     const local = this.localTetris;
 
     const player = local.player;
-    console.log(player);
+    console.log("player", player);
     ['pos', 'matrix', 'score'].forEach(key => {
-      player.event.listen(key, () => {
+      player.event.listen(key, value => {
         this.send({
           type: 'state-update',
           fragment: 'player',
-          state: [key, player[key]],
+          state: [key, value],
         });
       });
     });
-    // this.player.event.listen('pos', pos => {
-    //   console.log("Player pos", pos);
-    // });
-    // this.player.event.listen('matrix', matrix => {
-    //   console.log("Player matrix", matrix);
-    // });
+
+    const arena = local.arena;
+    console.log(arena);
+    ['matrix'].forEach(key => {
+      arena.event.listen(key, (value) => {
+        this.send({
+          type: 'state-update',
+          fragment: 'arena',
+          state: [key, value],
+        });
+      });
+    });
   }
 
   updateMangager(peers) {
@@ -78,6 +84,23 @@ class Connection {
       }
     });
   }
+
+  updatePeer(id, fragment, [prop, value]) {
+    if (!this.peers.has(id)) {
+      console.error('Client doese not exist', id);
+      return;
+    }
+
+    const tetris = this.peers.get(id);
+    tetris[fragment][prop] = value;
+    console.log("96",prop);
+
+    if (prop === 'score') {
+      tetris.UpdateScore(value);
+    } else {
+      tetris.Draw();
+    }
+  }
   
   receive(msg) {
     const data = JSON.parse(msg);
@@ -86,6 +109,8 @@ class Connection {
     } else if (data.type === 'session-broadcast') {
       console.log("+++ updating");
       this.updateMangager(data.peers);
+    } else if (data.type === 'state-update') {
+      this.updatePeer(data.clientId, data.fragment, data.state);
     }
   }
 
