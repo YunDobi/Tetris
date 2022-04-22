@@ -12,6 +12,7 @@ class Tetris {
     this.player.event.listen('score', score => {
       this.UpdateScore(score);
     });
+    this.UpdateScore(this.player.score);
 
     this.colors = [
       null,
@@ -107,6 +108,26 @@ class Tetris {
 
   run() {
     this._update();
+  }
+
+  serialize() {
+    return {
+      arena: {
+        matrix: this.arena.matrix,
+      },
+      player: {
+        matrix: this.player.matrix,
+        pos: this.player.pos,
+        score: this.player.score,
+      },
+    };
+  }
+
+  unserialize(state) {
+    this.arena = Object.assign(state.arena);
+    this.player = Object.assign(state.player);
+    this.UpdateScore(this.player.score);
+    this.Draw();
   }
 
   UpdateScore(score) {

@@ -42,7 +42,12 @@ const broadcastSession = function(session) {
       type: 'session-broadcast',
       peers: {
         you: client.id,
-        clients: clients.map(client => client.id),
+        clients: clients.map(client => {
+          return {
+            id: client.id,
+            state: client.state,
+          };
+        }),
       },
     });
   });
@@ -60,20 +65,24 @@ server.on('connection', conn => {
     if (data.type === 'create-session') {
       const session = createSession();
       session.join(client);
+
+      client.state = data.state;
       client.send({
         type: 'session-created',
         id: session.id,
+
       });
 
     } else if (data.type === 'join-session') {
       const session = getSession(data.id) || createSession(data.id);
       session.join(client);
 
+      client.state = data.state;
       broadcastSession(session);
       // console.log("Session", sessions);
     } else if (data.type === 'state-update') {
-      // const [key, value] = data.state;
-      // client.state[data.fragment][key] = value;
+      const [prop, value] = data.state;
+      client.state[data.fragment][prop] = value;
       client.broadcast(data);
     }
 
