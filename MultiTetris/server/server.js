@@ -71,12 +71,11 @@ server.on('connection', conn => {
 
       broadcastSession(session);
       // console.log("Session", sessions);
+    } else if (data.type === 'state-update') {
+      // const [key, value] = data.state;
+      // client.state[data.fragment][key] = value;
+      client.broadcast(data);
     }
-    // } else if (data.type === 'state-update') {
-    //         const [key, value] = data.state;
-    //         client.state[data.fragment][key] = value;
-    //         client.broadcast(data);
-    //     }
 
   });
 
