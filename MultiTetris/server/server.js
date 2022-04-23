@@ -1,8 +1,9 @@
 const WebSocketServer = require('ws').Server;
 const Session = require('./session');
 const Client = require('./client');
+const port = 9000;
 
-const server = new WebSocketServer({port: 9000});
+const server = new WebSocketServer({port: port});
 
 const sessions = new Map;
 
