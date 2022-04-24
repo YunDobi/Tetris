@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  backend:
+    container_name: multi-tetris-backend
+    restart: always
+    build: ./server
+    ports:
+      - "9000:9000"
+  
+  front:
+    container_name: multi-tetris-frontend
+    restart: always
+    build: ./public
+    ports:
+      - "8080:80"
+    links:
+      - backend
